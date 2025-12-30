@@ -1,0 +1,15 @@
+{% macro render_field(field, base_class=None) %}
+  {% set base = base_class
+      or (field.render_kw.get('class') if field.render_kw else 'form-control') %}
+
+  {% set classes = base %}
+  {% if field.errors %}
+    {% set classes = classes ~ ' is-invalid' %}
+  {% endif %}
+
+  {{ field(class=classes) }}
+
+  {% for error in field.errors %}
+    <div class="invalid-feedback">{{ error }}</div>
+  {% endfor %}
+{% endmacro %}

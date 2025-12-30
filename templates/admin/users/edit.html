@@ -1,0 +1,185 @@
+{% extends 'layouts/admin.html' %}
+
+{% set title = "Редактирование пользователя – "~user.username %}
+{% set global_disabled = True if user.id == current_user.id else False %}
+{% from "macros/form.html" import render_field %}
+
+{% block content %}
+<h3 class="pb-3 mb-3 border-bottom">
+  <i class="fa-solid fa-user"></i>
+  <span>{{ title }}</span>
+</h3>
+<div class="row g-4">
+
+  <!-- Основная зона -->
+  <div class="col-lg-8">
+    <form method="POST" novalidate>
+      {{ form.csrf_token() }}
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title mb-3">Основная информация</h5>
+
+          <div class="row mb-3">
+            <div class="col-12 col-md-3">ID:</div>
+            <div class="col-12 col-md-9">{{ user.id }}</div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-12 col-md-3">
+              <label class="form-label">Никнейм:</label>
+            </div>
+            <div class="col-12 col-md-9">
+              {{ render_field(form.username, base_class="form-control form-control-sm") }}
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-12 col-md-3">
+              <label class="form-label">Email:</label>
+            </div>
+            <div class="col-12 col-md-9">
+              {{ render_field(form.email, base_class="form-control form-control-sm") }}
+            </div>
+          </div>
+          <hr class="mb-3">
+          <div class="row mb-3">
+            <div class="col-12 col-md-3">
+              <label class="form-label">Список привилегий:</label>
+            </div>
+            <div class="col-12 col-md-9">
+              <div class="card">
+                <div class="card-body small" style="max-height: 250px; overflow-y: auto;">
+                  <div class="row g-0">
+                    {% for privilege in privileges_list(user.privileges, global_disabled) %}
+                    <div class="col-12 col-xl-6">
+                      <div class="form-check mb-0">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          value="{{ privilege.value }}"
+                          name="privilege"
+                          onclick="updatePrivileges()"
+                          id="privilege-{{ privilege.value }}"
+                          {{ privilege.checked }}
+                          {{ privilege.disabled }}
+                          {{ privilege.gd }}
+                        >
+                        <label class="form-check-label" for="privilege-{{ privilege.value }}">
+                          {{ privilege.name }} <code class="text-muted">({{ privilege.value }})</code>
+                        </label>
+                      </div>
+                    </div>
+                    {% endfor %}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-12 col-md-3">
+              <label class="form-label">Значение привилегии:</label>
+            </div>
+            <div class="col-12 col-md-9">
+              {{ render_field(form.privileges, base_class="form-control form-control-sm") }}
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-12 col-md-3">
+              <label class="form-label">Группа привилегий:</label>
+            </div>
+            <div class="col-12 col-md-9">
+              <select class="form-select form-select-sm"></select>
+            </div>
+          </div>
+
+          <button class="btn btn-sm btn-primary">
+            <i class="fa-solid fa-save"></i>
+            <span>Сохранить изменения</span>
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <!-- Информация и действия -->
+  <div class="col-lg-4">
+    <div class="card mb-3">
+      <div class="card-body">
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item text-center">
+            <img
+              src="https://placehold.co/128"
+              class="rounded-circle mb-2"
+              width="96"
+              height="96"
+              alt="Avatar"
+            >
+
+            <h5 class="mb-0">{{ user.username }}</h5>
+            <div class="row mt-3 text-center">
+              <div class="col-6">
+                <div class="fw-bold">TODO</div>
+                <small class="text-muted">Публикаций</small>
+              </div>
+              <div class="col-6">
+                <div class="fw-bold">TODO</div>
+                <small class="text-muted">Комментариев</small>
+              </div>
+            </div>
+          </li>
+          <li class="list-group-item px-0 py-3 small">
+            <div class="row">
+              <div class="col-5"><strong>Полное имя:</strong></div>
+              <div class="col-7">TODO</div>
+            </div>
+          </li>
+          <li class="list-group-item px-0 py-3 small">
+            <div class="row">
+              <div class="col-5"><strong>Email:</strong></div>
+              <div class="col-7"><a href="mailto:{{ user.email }}">{{ user.email }}</a></div>
+            </div>
+          </li>
+          <li class="list-group-item px-0 py-3 small">
+            <div class="row">
+              <div class="col-5"><strong>Дата регистрации:</strong></div>
+              <div class="col-7"><time datetime="{{ user.registered_at.isoformat() }}">{{ user.registered_at }}</time></div>
+            </div>
+          </li>
+          <li class="list-group-item px-0 py-3 small">
+            <div class="row">
+              <div class="col-5"><strong>Последняя активность:</strong></div>
+              <div class="col-7">TODO</div>
+            </div>
+          </li>
+          <li class="list-group-item px-0 py-3 small">
+            <div class="row">
+              <div class="col-5"><strong>Статус:</strong></div>
+              <div class="col-7"><span class="badge bg-success">Онлайн</span></div>
+            </div>
+          </li>
+          <li class="list-group-item px-0 py-3 pb-0">
+            <div class="d-grid gap-2">
+              <a href="#" class="btn btn-sm btn-outline-primary">
+                <i class="fa-solid fa-envelope"></i>
+                <span>Отправить сообщение</span>
+              </a>
+              <a href="#" class="btn btn-sm btn-outline-secondary">
+                <i class="fa-solid fa-user"></i>
+                <span>Посмотреть профиль</span>
+              </a>
+              <a href="#" class="btn btn-sm btn-outline-dark">
+                <i class="fa-solid fa-comments"></i>
+                <span>Комментарии пользователя</span>
+              </a>
+              <a href="#" class="btn btn-sm btn-outline-dark">
+                <i class="fa-solid fa-newspaper"></i>
+                <span>Новости пользователя</span>
+              </a>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+</div>
+
+{% endblock %}
