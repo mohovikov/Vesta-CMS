@@ -5,6 +5,7 @@ from sqlalchemy.orm import Mapped, mapped_column
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from app.extensions import db, login_manager
+from app.constants import Privileges
 
 
 class User(db.Model, UserMixin):
@@ -46,6 +47,9 @@ class User(db.Model, UserMixin):
     def check_password(self, password: str) -> bool:
         """Проверяет пароль по хэшу"""
         return check_password_hash(self.password, password)
+
+    def has_privilege(self, privileges: int):
+        return Privileges.has_privilege(privileges, self.privileges)
 
     def __init__(self, username: str, email: str, privileges: int) -> None:
         self.username = username
