@@ -27,6 +27,10 @@
         <li class="nav-item dropdown">
           <a href="#" role="button" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">{{ current_user.username }}</a>
           <ul class="dropdown-menu">
+            {% if current_user.has_privilege(privileges.ADMIN_ACCESS_PANEL) %}
+            <li><a href="{{ url_for('admin.dashboard') }}" target="_blank" class="dropdown-item">Админпанель</a></li>
+            <li><hr class="dropdown-divider"></li>
+            {% endif %}
             <li><a href="#" class="dropdown-item">Профиль</a></li>
             <li><a href="#" class="dropdown-item">Настройки</a></li>
             <li><hr class="dropdown-divider"></li>
