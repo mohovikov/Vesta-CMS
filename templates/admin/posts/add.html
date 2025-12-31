@@ -1,0 +1,61 @@
+{% extends 'layouts/admin.html' %}
+
+{% set title = "Добавление новой публикации" %}
+{% from "macros/form.html" import render_field %}
+
+{% block content %}
+<h3 class="pb-3 mb-3 border-bottom">
+  <i class="fa-solid fa-newspaper"></i>
+  <span>{{ title }}</span>
+</h3>
+<div class="row g-4">
+  <div class="col-12">
+    <form method="POST" novalidate>
+      {{ form.csrf_token() }}
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title mb-3">Основная информация</h5>
+
+          <div class="row mb-3">
+            <div class="col-12 col-md-3">{{ form.title.label.text }}</div>
+            <div class="col-12 col-md-9">
+              {{ render_field(form.title, base_class="form-control form-control-sm") }}
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-12 col-md-3">{{ form.slug.label.text }}</div>
+            <div class="col-12 col-md-9">
+              {{ render_field(form.slug, base_class="form-control form-control-sm") }}
+              <div id="{{ form.slug.name }}" class="form-text">{{ form.slug.description }}</div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-12 col-md-3">{{ form.excerpt.label.text }}</div>
+            <div class="col-12 col-md-9">
+              {{ render_field(form.excerpt, base_class="form-control") }}
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-12 col-md-3">{{ form.content.label.text }}</div>
+            <div class="col-12 col-md-9">
+              {{ render_field(form.content, base_class="form-control") }}
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-12 col-md-3">{{ form.status.label.text }}</div>
+            <div class="col-12 col-md-9">
+              {{ render_field(form.status, base_class="form-select") }}
+            </div>
+          </div>
+
+          <button class="btn btn-sm btn-primary">
+            <i class="fa-solid fa-save"></i>
+            <span>Добавить публикацию</span>
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+{% endblock %}
