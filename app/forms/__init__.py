@@ -1,2 +1,2 @@
 from .auth import RegisterForm, LoginForm
-from .edit import UserEditForm
+from .edit import *

@@ -1,6 +1,8 @@
 from flask_wtf import FlaskForm
-from wtforms import IntegerField, PasswordField, StringField, SubmitField
+from wtforms import IntegerField, PasswordField, SelectField, StringField, TextAreaField
 from wtforms.validators import DataRequired, Length, Email, Optional, NumberRange
+
+from app.constants import PostStatus
 
 
 class UserEditForm(FlaskForm):
@@ -50,4 +52,34 @@ class UserEditForm(FlaskForm):
         render_kw={
             "class": "form-control",
         },
+    )
+
+class PostForm(FlaskForm):
+    title = StringField(
+        "Заголовок",
+        validators=[DataRequired(), Length(max=255)]
+    )
+    slug = StringField(
+        "Slug (URL)",
+        description="Если оставить пустым, будет сгенерирован автоматически",
+        validators=[Optional(), Length(max=255)]
+    )
+    excerpt = TextAreaField(
+        "Краткое описание",
+        validators=[DataRequired()],
+        render_kw = {
+            "rows": 10
+        }
+    )
+    content = TextAreaField(
+        "Содержание",
+        validators=[DataRequired()],
+        render_kw = {
+            "rows": 10
+        }
+    )
+    status = SelectField(
+        "Статус",
+        choices=[(status.value, status.name.capitalize()) for status in PostStatus],
+        validators=[DataRequired()]
     )
