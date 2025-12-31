@@ -29,6 +29,14 @@
       toastElList.forEach(function (toastEl) {
           new bootstrap.Toast(toastEl).show()
       })
+
+      const tooltipTriggerList = [].slice.call(
+        document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      );
+
+      tooltipTriggerList.map(function (tooltipTriggerEl) {
+          return new bootstrap.Tooltip(tooltipTriggerEl);
+      });
     })
   </script>
 </body>
