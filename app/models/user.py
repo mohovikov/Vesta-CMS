@@ -1,12 +1,16 @@
 from datetime import datetime, timezone
+from typing import List, TYPE_CHECKING
 from flask_login import UserMixin
 from sqlalchemy import BigInteger, DateTime, Integer, String
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from app.extensions import db, login_manager
 from app.constants import Privileges
 
+
+if TYPE_CHECKING:
+    from app.models import Post
 
 class User(db.Model, UserMixin):
     __tablename__ = 'users'
@@ -38,6 +42,12 @@ class User(db.Model, UserMixin):
         DateTime(timezone = True),
         default = lambda: datetime.now(timezone.utc),
         nullable = False
+    )
+
+    # SQLAlchemy связи
+    posts: Mapped[List["Post"]] = relationship(
+        back_populates="author",
+        cascade="all, delete-orphan"
     )
 
     def set_password(self, password: str) -> None:
