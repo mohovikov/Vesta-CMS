@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from markupsafe import Markup, escape
 from typing import TYPE_CHECKING
 from sqlalchemy import (
@@ -47,11 +47,13 @@ class Post(db.Model):
     meta_keywords: Mapped[str | None] = mapped_column(String(255), nullable=True)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone = True),
+        default = lambda: datetime.now(timezone.utc),
         server_default = text("UTC_TIMESTAMP()"),
         nullable = False
     )
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone = True),
+        onupdate = lambda: datetime.now(timezone.utc),
         server_default = text("UTC_TIMESTAMP()"),
         server_onupdate = text("UTC_TIMESTAMP()"),
         nullable = False
