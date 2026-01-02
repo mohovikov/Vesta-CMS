@@ -1,7 +1,15 @@
 from datetime import datetime
 from markupsafe import Markup, escape
 from typing import TYPE_CHECKING
-from sqlalchemy import DateTime, Enum, ForeignKey, Integer, String, Text, text
+from sqlalchemy import (
+    DateTime,
+    Enum,
+    ForeignKey,
+    Integer,
+    String,
+    text,
+    Text
+)
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from slugify import slugify
 
@@ -34,6 +42,9 @@ class Post(db.Model):
         default = PostStatus.DRAFT,
         server_default = PostStatus.DRAFT.value
     )
+    meta_title: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    meta_description: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    meta_keywords: Mapped[str | None] = mapped_column(String(255), nullable=True)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone = True),
         server_default = text("UTC_TIMESTAMP()"),
@@ -56,13 +67,19 @@ class Post(db.Model):
             slug: str,
             excerpt: str,
             content: str,
-            status: PostStatus = PostStatus.DRAFT
+            status: PostStatus = PostStatus.DRAFT,
+            meta_title: str | None = None,
+            meta_description: str | None = None,
+            meta_keywords: str | None = None,
             ) -> None:
         self.title = title
         self.slug = slug
         self.excerpt = excerpt
         self.content = content
         self.status = status
+        self.meta_title = meta_title
+        self.meta_description = meta_description
+        self.meta_keywords = meta_keywords
 
     @staticmethod
     def generate_slug(title: str) -> str:
