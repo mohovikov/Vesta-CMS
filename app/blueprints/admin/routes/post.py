@@ -31,3 +31,28 @@ def add_post():
         "admin/posts/add.html",
         form = form
     )
+
+@admin.route("/posts/<int:id>/edit", methods=["GET", "POST"])
+def edit_post(id: int):
+    post = services.get_post_by_id(id)
+
+    if not post:
+        flash("Такой новости не существует", "warning")
+        return redirect(url_for("admin.posts", page = 1))
+
+    form = forms.PostForm(obj=post)
+
+    if form.validate_on_submit():
+        success, error = services.save_edit_post(post, form)
+
+        if success:
+            flash("Статья успешно обновлена и сохранена.", "success")
+            return redirect(url_for("admin.edit_post", id = post.id))
+
+        flash(error if error else "Ошибка при сохранении данных. Пожалуйста, повторите попытку позже", "danger")
+
+    return render_template(
+        "admin/posts/edit.html",
+        post = post,
+        form = form
+    )
