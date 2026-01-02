@@ -16,9 +16,9 @@ from slugify import slugify
 from app.constants import PostStatus
 from app.extensions import db
 
-if TYPE_CHECKING:
-    from app.models import User
 
+if TYPE_CHECKING:
+    from app.models import User, Category
 
 class Post(db.Model):
     __tablename__ = "posts"
@@ -31,6 +31,10 @@ class Post(db.Model):
     author_id: Mapped[int] = mapped_column(
         ForeignKey("users.id", ondelete = "CASCADE"),
         nullable = False
+    )
+    category_id: Mapped[int] = mapped_column(
+        ForeignKey("categories.id", ondelete="SET NULL"),
+        nullable = True
     )
     title: Mapped[str] = mapped_column(String(255), nullable = False)
     slug: Mapped[str] = mapped_column(String(255), unique = True, nullable = False)
@@ -60,20 +64,25 @@ class Post(db.Model):
     )
 
     author: Mapped["User"] = relationship(
+        "User",
+        back_populates = "posts"
+    )
+    category: Mapped["Category"] = relationship(
+        "Category",
         back_populates = "posts"
     )
 
     def __init__(
-            self,
-            title: str,
-            slug: str,
-            excerpt: str,
-            content: str,
-            status: PostStatus = PostStatus.DRAFT,
-            meta_title: str | None = None,
-            meta_description: str | None = None,
-            meta_keywords: str | None = None,
-            ) -> None:
+        self,
+        title: str,
+        slug: str,
+        excerpt: str,
+        content: str,
+        status: PostStatus = PostStatus.DRAFT,
+        meta_title: str | None = None,
+        meta_description: str | None = None,
+        meta_keywords: str | None = None,
+    ) -> None:
         self.title = title
         self.slug = slug
         self.excerpt = excerpt
