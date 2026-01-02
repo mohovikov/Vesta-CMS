@@ -83,3 +83,36 @@ class PostForm(FlaskForm):
         choices=[(status.value, status.name.capitalize()) for status in PostStatus],
         validators=[DataRequired()]
     )
+    meta_title = StringField(
+        "Meta Title",
+        validators=[
+            Optional(),
+            Length(max=255, message="Meta Title не должен превышать 60 символов")
+        ],
+        render_kw={
+            "placeholder": "Заголовок страницы для SEO"
+        }
+    )
+
+    meta_description = TextAreaField(
+        "Meta Description",
+        validators=[
+            Optional(),
+            Length(max=255, message="Meta Description не должен превышать 160 символов")
+        ],
+        render_kw={
+            "placeholder": "Краткое описание новости для SEO",
+            "rows": 7
+        }
+    )
+
+    meta_keywords = StringField(
+        "Meta Keywords",
+        validators=[
+            Optional(),
+            Length(max=255, message="Meta Keywords не должен превышать 255 символов")
+        ],
+        render_kw={
+            "placeholder": "Ключевые слова новости для SEO"
+        }
+    )
