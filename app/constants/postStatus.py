@@ -6,3 +6,6 @@ class PostStatus(str, Enum):
     PUBLISHED = "published"
     ARCHIVED = "archived"
     DELETED = "deleted"
+
+    def __str__(self):
+        return str(self.value)
