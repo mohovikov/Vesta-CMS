@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import IntegerField, PasswordField, SelectField, StringField, TextAreaField
+from wtforms import RadioField, IntegerField, PasswordField, SelectField, StringField, TextAreaField
 from wtforms.validators import DataRequired, Length, Email, Optional, NumberRange
 
 from app.constants import PostStatus
@@ -57,12 +57,12 @@ class UserEditForm(FlaskForm):
 class PostForm(FlaskForm):
     title = StringField(
         "Заголовок",
-        validators=[DataRequired(), Length(max=255)]
+        validators=[DataRequired(), Length(min=2, max=255)]
     )
     slug = StringField(
         "Slug (URL)",
         description="Если оставить пустым, будет сгенерирован автоматически",
-        validators=[Optional(), Length(max=255)]
+        validators=[Optional(), Length(min=2, max=255)]
     )
     excerpt = TextAreaField(
         "Краткое описание",
@@ -115,4 +115,40 @@ class PostForm(FlaskForm):
         render_kw={
             "placeholder": "Ключевые слова новости для SEO"
         }
+    )
+
+class CategoryForm(FlaskForm):
+    title = StringField(
+        "Название категории",
+        validators=[
+            DataRequired(),
+            Length(min=2, max=100)
+        ]
+    )
+
+    slug = StringField(
+        "Slug (URL)",
+        description="Если оставить пустым, будет сгенерирован автоматически",
+        validators=[Optional(), Length(min=2, max=255)]
+    )
+
+    description = TextAreaField(
+        "Описание",
+        validators=[
+            Optional(),
+            Length(max=2000)
+        ],
+        render_kw = {
+            "rows": 5
+        }
+    )
+
+    is_active = RadioField(
+        "Статус",
+        choices = [
+            (1, "Активна"),
+            (0, "Отключена")
+        ],
+        coerce = int,
+        default = 1
     )

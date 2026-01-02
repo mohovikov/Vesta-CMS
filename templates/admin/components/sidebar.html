@@ -25,6 +25,12 @@
           </a>
         </li>
         <li class="nav-item">
+          <a class="nav-link d-flex align-items-center gap-2" href="{{ url_for('admin.categories', page = 1) }}">
+            <i class="fa-solid fa-layer-group"></i>
+            <span>Категории</span>
+          </a>
+        </li>
+        <li class="nav-item">
           <a class="nav-link d-flex align-items-center gap-2" href="{{ url_for('admin.posts', page = 1) }}">
             <i class="fa-solid fa-newspaper"></i>
             <span>Новости</span>

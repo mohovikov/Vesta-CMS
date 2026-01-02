@@ -9,6 +9,7 @@ from sqlalchemy import (
     text
 )
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+from slugify import slugify
 
 from app.extensions import db
 
@@ -69,3 +70,15 @@ class Category(db.Model):
         self.slug = slug
         self.description = description
         self.is_active = is_active
+    
+    @staticmethod
+    def generate_slug(title: str) -> str:
+        base_slug = slugify(title)
+        slug = base_slug
+        counter = 1
+
+        while Category.query.filter_by(slug = slug).first():
+            slug = f"{base_slug}-{counter}"
+            counter += 1
+
+        return slug
