@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
   <link rel="stylesheet" href="{{ url_for('static', filename="admin/css/style.css") }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename="sceditor/default-style.min.css") }}">
 
   <title>{{ title }} | {{ app_name }} AdminPanel</title>
 </head>
@@ -39,5 +40,10 @@
       });
     })
   </script>
+  <!-- SCEditor -->
+  <script src="{{ url_for('static', filename="sceditor/sceditor.min.js") }}"></script>
+  <script src="{{ url_for('static', filename="sceditor/xhtml.js") }}"></script>
+  <script src="{{ url_for('static', filename="sceditor/ru.js") }}"></script>
+  {% block js %}{% endblock %}
 </body>
 </html>
